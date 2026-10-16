@@ -45,7 +45,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ slug, onBack }) =>
         <div className="max-w-[760px] mb-12">
           <div className="flex items-center gap-3 mb-4">
             <Chip variant="discipline">{project.discipline}</Chip>
-            <span className="type-caption-xs text-body font-mono">
+            <span className="type-caption-xs text-body">
               {project.year}
             </span>
           </div>
@@ -74,11 +74,8 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ slug, onBack }) =>
         {/* Project Media: 3:2 ratio, 32px radius */}
         <div className="w-full aspect-[3/2] rounded-[32px] overflow-hidden bg-surface-tint border border-border mb-16 flex flex-col justify-between p-8 md:p-12 relative">
           <div className="flex justify-between items-start">
-            <span className="type-caption-xs-strong text-body uppercase font-mono">
+            <span className="type-caption-xs-strong text-body">
               {project.discipline}
-            </span>
-            <span className="type-caption-xs text-muted font-mono uppercase">
-              Asset Resolution: 576 × 384
             </span>
           </div>
 
@@ -95,7 +92,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ slug, onBack }) =>
             <span className="type-caption-xs text-body">
               Status: Concrete placeholder
             </span>
-            <span className="type-caption-xs text-muted font-mono">
+            <span className="type-caption-xs text-muted">
               /public/work/{project.slug}/
             </span>
           </div>

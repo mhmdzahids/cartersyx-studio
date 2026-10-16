@@ -23,7 +23,7 @@ export const Chip: React.FC<ChipProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center text-caption-xs-strong text-body uppercase tracking-[0.2px] ${className}`.trim()}
+      className={`inline-flex items-center text-caption-xs-strong text-body tracking-[0.2px] ${className}`.trim()}
     >
       {children}
     </span>

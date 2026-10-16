@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './Button';
+import logoBlack from '../assets/logo/logo-black.png';
 
 export interface NavProps {
   isDark: boolean;
@@ -58,14 +59,20 @@ export const Nav: React.FC<NavProps> = ({
   return (
     <header className="sticky top-0 z-50 w-full h-[92px] bg-[var(--color-nav-bg)] backdrop-blur-md border-b border-border transition-colors duration-200">
       <div className="max-w-content mx-auto h-full px-5 flex items-center justify-between">
-        {/* Typographic Wordmark */}
+        {/* Typographic Wordmark & Logo */}
         <a
           href="/"
           onClick={handleBrandClick}
-          className="text-body-xl font-display text-ink tracking-tight hover:opacity-80 transition-opacity focus-visible:outline-2 focus-visible:outline-focus-ring focus-visible:outline-offset-2"
+          className="flex items-center gap-2.5 text-body-xl font-display text-ink tracking-tight hover:opacity-80 transition-opacity focus-visible:outline-2 focus-visible:outline-focus-ring focus-visible:outline-offset-2"
           aria-label="Cartesyx Studio Homepage"
         >
-          Cartesyx
+          <img
+            src={logoBlack}
+            alt=""
+            aria-hidden="true"
+            className="w-6 h-6 object-contain brand-logo select-none"
+          />
+          <span>Cartesyx</span>
         </a>
 
         {/* Desktop Navigation Links (Visible >= 768px) */}

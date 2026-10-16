@@ -3,7 +3,7 @@ import { Button } from './Button';
 
 export const Hero: React.FC = () => {
   return (
-    <section className="w-full pt-16 md:pt-28 lg:pt-[160px] pb-12 md:pb-20 px-5">
+    <section className="w-full pt-16 md:pt-28 lg:pt-[160px] pb-0 px-5">
       <div className="max-w-content mx-auto">
         <div className="max-w-[840px] mx-auto text-center flex flex-col items-center">
           {/* Main H1 Headline */}
@@ -11,8 +11,8 @@ export const Hero: React.FC = () => {
             We design it, animate it, and build it.
           </h1>
 
-          {/* Subheadline (body-xl, max-w 560px, #707070 in light) */}
-          <p className="type-body-xl text-body max-w-[560px] mx-auto mb-8 text-center">
+          {/* Subheadline: plain regular weight in #707070 */}
+          <p className="type-hero-subtitle max-w-[560px] mx-auto mb-8 text-center">
             Cartesyx Studio is a small studio for motion graphics, web development, event and DJ visuals, and Unity.
           </p>
 

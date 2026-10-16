@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
+import { Showreel } from './components/Showreel';
 import { Work } from './components/Work';
 import { Services } from './components/Services';
 import { Footer } from './components/Footer';
@@ -91,6 +92,16 @@ export const App: React.FC = () => {
     }
   };
 
+  const [workFilter, setWorkFilter] = useState<'All' | 'Web' | 'Motion'>('All');
+
+  const handleSelectServiceFilter = (filter: 'Web' | 'Motion') => {
+    setWorkFilter(filter);
+    const el = document.getElementById('work');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-canvas text-ink flex flex-col font-sans transition-colors duration-200">
       {/* Skip to Main Content Link for Keyboard Accessibility */}
@@ -115,8 +126,13 @@ export const App: React.FC = () => {
       ) : (
         <main id="main-content" className="flex-1 flex flex-col">
           <Hero />
-          <Work onSelectProject={handleSelectProject} />
-          <Services />
+          <Showreel />
+          <Work
+            onSelectProject={handleSelectProject}
+            activeFilter={workFilter}
+            onFilterChange={setWorkFilter}
+          />
+          <Services onSelectFilter={handleSelectServiceFilter} />
         </main>
       )}
 

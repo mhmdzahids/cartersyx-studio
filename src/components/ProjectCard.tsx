@@ -1,10 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Project } from '../data/projects';
-import { Chip } from './Chip';
 
 export interface ProjectCardProps {
   project: Project;
   onSelectProject?: (slug: string) => void;
+}
+
+function formatDiscipline(discipline: string): string {
+  if (!discipline) return '';
+  const clean = discipline.replace(/\s*\(.*\)/, '').trim();
+  return clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProject }) => {
@@ -22,19 +27,26 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProje
     const listener = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches);
     };
-
     mediaQuery.addEventListener('change', listener);
     return () => mediaQuery.removeEventListener('change', listener);
   }, []);
 
+  const isTouchDevice = () => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  };
+
   const handleStartPlayback = () => {
-    if (project.media.type === 'video' && videoRef.current && !prefersReducedMotion) {
+    if (
+      project.media.type === 'video' &&
+      videoRef.current &&
+      !prefersReducedMotion &&
+      !isTouchDevice()
+    ) {
       videoRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch(() => {
-          // Handled gracefully if browser denies play
-        });
+        .catch(() => {});
     }
   };
 
@@ -57,116 +69,73 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProje
   };
 
   return (
-    <article
-      className="group flex flex-col cursor-pointer focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-4 rounded-[32px] transition-opacity"
+    <a
+      href={`/work/${project.slug}`}
+      onClick={handleClick}
       onMouseEnter={handleStartPlayback}
       onMouseLeave={handleStopPlayback}
+      onFocus={handleStartPlayback}
+      onBlur={handleStopPlayback}
+      aria-label={project.title}
+      className="group block w-full rounded-[32px] focus-visible:outline-2 focus-visible:outline-focus-ring focus-visible:outline-offset-8"
     >
-      <a
-        href={`/work/${project.slug}`}
-        onClick={handleClick}
-        onFocus={handleStartPlayback}
-        onBlur={handleStopPlayback}
-        className="block focus:outline-none"
-        aria-label={`View project details for ${project.title}`}
-      >
-        {/* Media Container: 32px radius, 3:2 ratio, 576x384 proportion */}
-        <div className="relative w-full aspect-[3/2] rounded-[32px] overflow-hidden bg-surface-tint border border-border transition-colors duration-200">
-          {project.placeholder ? (
-            /* Flat tinted media block showing the project title in typography */
-            <div className="w-full h-full flex flex-col justify-between p-6 md:p-8 bg-surface-tint transition-colors duration-200">
-              <div className="flex items-start justify-between">
-                <span className="type-caption-xs text-body font-mono uppercase tracking-[0.2px]">
-                  {project.category === 'Motion' ? 'Motion' : 'Web'}
-                </span>
-                <span className="type-caption-xs text-body font-mono">
-                  {project.year}
-                </span>
-              </div>
+      {/* 1. Media, ratio 3:2, radius 32px, overflow hidden. NO text inside the media */}
+      <div className="relative w-full aspect-[3/2] rounded-[32px] overflow-hidden project-card-media transition-opacity duration-150 group-hover:opacity-[0.92]">
+        {project.placeholder ? (
+          <div data-placeholder="true" className="w-full h-full" />
+        ) : (
+          <img
+            src={project.media.posterUrl}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        )}
 
-              {/* Title typography block inside media */}
-              <div className="my-auto">
-                <p className="type-body-xl font-display text-ink tracking-tight mb-2">
-                  {project.title}
-                </p>
-                <p className="type-body-sm text-body line-clamp-2 max-w-sm">
-                  {project.description}
-                </p>
-              </div>
+        {/* Video loop layer for motion cards on desktop hover/focus */}
+        {project.media.type === 'video' && project.media.videoUrl && (
+          <video
+            ref={videoRef}
+            src={project.media.videoUrl}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
+              isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+            aria-hidden="true"
+          />
+        )}
 
-              {/* Motion badge or web indicator */}
-              <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                <span className="type-caption-xs text-body">
-                  {project.category === 'Motion' ? 'Motion preview' : 'Static preview'}
-                </span>
-                <span className="type-caption-xs text-muted font-mono uppercase">
-                  576 × 384
-                </span>
-              </div>
-
-              {/* Video layer for Motion cards playing on hover/focus */}
-              {project.media.type === 'video' && project.media.videoUrl && (
-                <video
-                  ref={videoRef}
-                  src={project.media.videoUrl}
-                  poster={project.media.posterUrl}
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  width={project.media.width}
-                  height={project.media.height}
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
-                    isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                  }`}
-                  aria-hidden="true"
-                />
-              )}
-            </div>
-          ) : (
-            /* Real media rendering if placeholder is false */
-            <div className="w-full h-full relative">
-              <img
-                src={project.media.posterUrl}
-                alt={project.media.alt}
-                width={project.media.width}
-                height={project.media.height}
-                loading="lazy"
-                className="w-full h-full object-cover"
-              />
-              {project.media.type === 'video' && project.media.videoUrl && (
-                <video
-                  ref={videoRef}
-                  src={project.media.videoUrl}
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  width={project.media.width}
-                  height={project.media.height}
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
-                    isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                  }`}
-                  aria-hidden="true"
-                />
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Card Metadata: Title (body-lg) + one-line description + tag */}
-        <div className="pt-4 px-1 flex flex-col gap-1">
-          <div className="flex items-baseline justify-between gap-4">
-            <h3 className="type-body-lg text-ink group-hover:opacity-80 transition-opacity">
-              {project.title}
-            </h3>
-            <Chip variant="discipline">{project.discipline}</Chip>
+        {/* 36px round utility play icon for Motion cards in bottom-left corner, 16px from edges */}
+        {project.category === 'Motion' && (
+          <div
+            className="absolute bottom-4 left-4 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center pointer-events-none"
+            aria-hidden="true"
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M3.5 2.5L9.5 6L3.5 9.5V2.5Z" fill="currentColor" />
+            </svg>
           </div>
-          <p className="type-body-md text-body line-clamp-1">
-            {project.description}
-          </p>
-        </div>
-      </a>
-    </article>
+        )}
+      </div>
+
+      {/* 2. 12px gap, then one row: title on left, year on right in meta style #707070 */}
+      <div className="mt-3 flex items-baseline justify-between gap-4">
+        <h3 className="type-card-title text-ink">{project.title}</h3>
+        <span className="type-meta text-body flex-shrink-0">{project.year}</span>
+      </div>
+
+      {/* 3. Below title: ONE muted line (meta style): discipline in sentence case */}
+      <p className="type-meta text-body truncate mt-1">
+        {formatDiscipline(project.discipline)}
+      </p>
+    </a>
   );
 };
