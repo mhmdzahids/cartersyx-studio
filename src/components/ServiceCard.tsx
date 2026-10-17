@@ -1,8 +1,8 @@
 import React from 'react';
 import { VisualDesignArt } from './art/VisualDesignArt';
 import { MotionGraphicsArt } from './art/MotionGraphicsArt';
-import { WebDevelopmentArt } from './art/WebDevelopmentArt';
 import { VideoEditingCard } from './VideoEditingCard';
+import { WebDevCard } from './WebDevCard';
 
 export interface ServiceCardData {
   id: string;
@@ -28,6 +28,14 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
     );
   }
 
+  if (service.id === 'web-development') {
+    return (
+      <li className="list-none w-full">
+        <WebDevCard service={service} />
+      </li>
+    );
+  }
+
   const isLinked = service.hasPortfolio && !!service.filterTarget;
   const descriptionId = `service-desc-${service.id}`;
 
@@ -37,8 +45,6 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
         return <VisualDesignArt />;
       case 'motion-graphics':
         return <MotionGraphicsArt />;
-      case 'web-development':
-        return <WebDevelopmentArt />;
       default:
         return null;
     }
@@ -62,7 +68,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
           <span>{service.title}</span>
           {service.showSoon && (
             <span
-              className="ml-2 text-[14px] font-[500] text-[var(--service-soon-text)] select-none"
+              className="ml-2 text-[13px] font-[500] text-[var(--service-soon-text)] select-none"
               aria-label="Portfolio coming soon"
             >
               Soon

@@ -16,6 +16,15 @@ const SERVICES_DATA: ServiceCardData[] = [
     showSoon: false,
   },
   {
+    id: 'web-development',
+    title: 'Web Development',
+    fullTitle: 'Web Development',
+    description:
+      'Fast portfolio sites, editorial archives, and custom front-end applications. Clean TypeScript code, accessible semantics, and zero bloat.',
+    hasPortfolio: false,
+    showSoon: false,
+  },
+  {
     id: 'visual-design',
     title: 'Visual Design',
     fullTitle: 'Visual Design (DJ & Event)',
@@ -32,16 +41,6 @@ const SERVICES_DATA: ServiceCardData[] = [
       'Title sequences, brand idents, product reveals, and kinetic typography. Delivered as broadcast-ready files and real-time loops.',
     hasPortfolio: true,
     filterTarget: 'Motion',
-    showSoon: false,
-  },
-  {
-    id: 'web-development',
-    title: 'Web Development',
-    fullTitle: 'Web Development',
-    description:
-      'Fast portfolio sites, editorial archives, and custom front-end applications. Clean TypeScript code, accessible semantics, and zero bloat.',
-    hasPortfolio: true,
-    filterTarget: 'Web',
     showSoon: false,
   },
 ];

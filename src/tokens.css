@@ -397,19 +397,20 @@ p {
 }
 
 /* Service card label:
-   < 768px: 24px, w450, 1.2
-   >= 768px: 20px, w450, 1.2 */
+   < 768px: 20px, w450, 1.2
+   >= 768px: 18px, w450, 1.2 */
 .type-service-card-label {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 450;
   line-height: 1.2;
   letter-spacing: 0px;
   text-align: center;
+  text-wrap: balance;
 }
 
 @media (min-width: 768px) {
   .type-service-card-label {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
@@ -547,14 +548,15 @@ p {
   transition: background-color 150ms ease;
   display: grid;
   grid-template-rows: auto 1fr;
-  row-gap: 32px;
-  padding: 20px 0 0 0;
+  row-gap: max(32px, calc(23.4cqw - 48px));
+  padding: 24px 0 0 0;
   container-type: inline-size;
 }
 
 @media (min-width: 768px) {
   .service-mobbin-card {
     aspect-ratio: 5 / 4;
+    row-gap: 32px;
   }
 }
 
@@ -572,14 +574,159 @@ p {
   background-color: var(--service-card-hover-tint);
 }
 
-/* Video editing button wrapper */
-.service-video-button {
-  border-radius: 16px 16px 0 0;
+/* Shared screen-media style for Video Editing screen and Carousel slides */
+.screen-media {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 9 / 14;
+  overflow: hidden;
+  display: block;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
 }
 
+.screen-media__screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: clamp(14px, 12.5cqw, 24px) clamp(14px, 12.5cqw, 24px) 0 0;
+  overflow: hidden;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  transform: translateZ(0);
+  background-color: var(--color-surface-tint);
+}
+
+.dark .screen-media__screen {
+  background-color: var(--color-surface-alt);
+  border-top: 1px solid #353535;
+  border-left: 1px solid #353535;
+  border-right: 1px solid #353535;
+  border-bottom: 0px solid transparent;
+}
+
+.screen-media:focus-visible,
 .service-video-button:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: -4px;
+}
+
+/* Web Development Marquee */
+.marquee {
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  min-height: max-content;
+  align-self: end;
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-dur, 28s) linear infinite;
+  will-change: transform;
+}
+
+.marquee__set {
+  display: flex;
+  flex: none;
+  gap: var(--marquee-gap, 12px);
+  padding-inline-end: var(--marquee-gap, 12px);
+}
+
+.marquee__slide {
+  flex: none;
+  width: 45cqw;
+}
+
+@media (min-width: 768px) {
+  .marquee__slide {
+    width: 41cqw;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Pause marquee on focus-within */
+.service-mobbin-card:focus-within .marquee__track {
+  animation-play-state: paused;
+}
+
+/* Pause marquee via data attribute (touch hold, pause button, off-screen) */
+[data-marquee-paused="true"] .marquee__track {
+  animation-play-state: paused !important;
+}
+
+/* Keyboard pause toggle button: visually hidden until focus-visible */
+.marquee-pause-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  outline: none;
+}
+
+.marquee-pause-button:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Reduced motion / Save-Data fallback static scroller */
+[data-motion="off"] .marquee__track {
+  animation: none !important;
+  width: 100%;
+}
+
+[data-motion="off"] .marquee-static-scroller {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  height: auto;
+  min-height: max-content;
+  align-self: end;
+  flex: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  touch-action: pan-y;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 12px;
+  padding-inline-end: calc(100% - 45cqw);
+}
+
+@media (min-width: 768px) {
+  [data-motion="off"] .marquee-static-scroller {
+    padding-inline-end: calc(100% - 41cqw);
+  }
+}
+
+[data-motion="off"] .marquee-static-scroller::-webkit-scrollbar {
+  display: none;
 }
 
 /* Art keyframe animations */
