@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button } from './Button';
 import logoBlack from '../assets/logo/logo-black.png';
 
@@ -57,7 +58,8 @@ export const Nav: React.FC<NavProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full h-[92px] bg-[var(--color-nav-bg)] backdrop-blur-md border-b border-border transition-colors duration-200">
+    <>
+      <header className="sticky top-0 z-50 w-full h-[92px] bg-[var(--color-nav-bg)] backdrop-blur-md border-b border-border transition-colors duration-200">
       <div className="max-w-content mx-auto h-full px-5 flex items-center justify-between">
         {/* Typographic Wordmark & Logo */}
         <a
@@ -201,50 +203,52 @@ export const Nav: React.FC<NavProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu Overlay & Panel */}
-      {mobileMenuOpen && (
-        <div
-          id="mobile-nav-dialog"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Navigation Menu"
-          className="md:hidden fixed inset-x-0 top-[92px] bottom-0 bg-canvas border-t border-border z-40 flex flex-col justify-between p-6 overflow-y-auto animate-in fade-in duration-150"
-        >
-          <nav aria-label="Mobile Navigation" className="flex flex-col gap-6 pt-4">
-            <a
-              href="#work"
-              onClick={handleSectionClick('work')}
-              className="text-display-md font-display text-ink hover:opacity-70 transition-opacity"
-            >
-              Work
-            </a>
-            <a
-              href="#services"
-              onClick={handleSectionClick('services')}
-              className="text-display-md font-display text-ink hover:opacity-70 transition-opacity"
-            >
-              Services
-            </a>
-            <a
-              href="#contact"
-              onClick={handleSectionClick('contact')}
-              className="text-display-md font-display text-ink hover:opacity-70 transition-opacity"
-            >
-              Contact
-            </a>
-          </nav>
-
-          <div className="pt-8 pb-4 border-t border-border flex flex-col gap-4">
-            <Button variant="primary" href="#contact" onClick={handleSectionClick('contact')} className="w-full text-center">
-              Start a project
-            </Button>
-            <p className="type-caption-xs text-body text-center">
-              Cartesyx Studio · Visual Design, Motion, Web &amp; Unity
-            </p>
-          </div>
-        </div>
-      )}
     </header>
-  );
+
+    {/* Mobile Menu Overlay & Panel - Portaled to document.body so header's backdrop-filter does not trap or clip the fixed container */}
+    {mobileMenuOpen && typeof document !== 'undefined' && createPortal(
+      <div
+        id="mobile-nav-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation Menu"
+        className="md:hidden fixed inset-x-0 top-[92px] bottom-0 bg-canvas border-t border-border z-40 flex flex-col justify-between p-6 overflow-y-auto"
+      >
+        <nav aria-label="Mobile Navigation" className="flex flex-col gap-6 pt-4">
+          <a
+            href="#work"
+            onClick={handleSectionClick('work')}
+            className="text-display-md font-display text-ink hover:opacity-70 transition-opacity"
+          >
+            Work
+          </a>
+          <a
+            href="#services"
+            onClick={handleSectionClick('services')}
+            className="text-display-md font-display text-ink hover:opacity-70 transition-opacity"
+          >
+            Services
+          </a>
+          <a
+            href="#contact"
+            onClick={handleSectionClick('contact')}
+            className="text-display-md font-display text-ink hover:opacity-70 transition-opacity"
+          >
+            Contact
+          </a>
+        </nav>
+
+        <div className="pt-8 pb-4 border-t border-border flex flex-col gap-4">
+          <Button variant="primary" href="#contact" onClick={handleSectionClick('contact')} className="w-full text-center">
+            Start a project
+          </Button>
+          <p className="type-caption-xs text-body text-center">
+            Cartesyx Studio · Visual Design, Motion, Web &amp; Unity
+          </p>
+        </div>
+      </div>,
+      document.body
+    )}
+  </>
+);
 };

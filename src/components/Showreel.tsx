@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { PROJECTS } from '../data/projects';
 import logoBlack from '../assets/logo/logo-black.png';
 
@@ -9,20 +9,6 @@ export const Showreel: React.FC = () => {
   const [shouldLoadSources, setShouldLoadSources] = useState(
     () => typeof window !== 'undefined' && !('IntersectionObserver' in window)
   );
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-
-  // User manual pause state - if user paused manually, never auto-resume on scroll
-  const userPausedRef = useRef(false);
-
-  // Format MM:SS for real video timecode
-  const formatTime = (seconds: number): string => {
-    if (isNaN(seconds) || seconds < 0) return '00:00';
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
 
   // Check prefers-reduced-motion
   const prefersReducedMotion = (): boolean => {
@@ -77,20 +63,12 @@ export const Showreel: React.FC = () => {
         const isVisible50 = entry.intersectionRatio >= 0.5;
 
         if (isVisible50) {
-          // Only auto-play if user did not manually pause, and reduced-motion / save-data are off
-          if (!userPausedRef.current && !prefersReducedMotion() && !isSaveData()) {
-            videoEl
-              .play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {
-                setIsPlaying(false);
-              });
+          if (!prefersReducedMotion() && !isSaveData()) {
+            videoEl.play().catch(() => {});
           }
         } else {
-          // Pause when leaving >= 50% viewport
           if (!videoEl.paused) {
             videoEl.pause();
-            setIsPlaying(false);
           }
         }
       },
@@ -100,39 +78,6 @@ export const Showreel: React.FC = () => {
     visibilityObserver.observe(videoEl);
     return () => visibilityObserver.disconnect();
   }, [shouldLoadSources]);
-
-  // Handle manual toggle play / pause
-  const handleTogglePlay = useCallback(() => {
-    const videoEl = videoRef.current;
-    if (!videoEl) return;
-
-    if (isPlaying) {
-      videoEl.pause();
-      userPausedRef.current = true;
-      setIsPlaying(false);
-    } else {
-      userPausedRef.current = false;
-      videoEl
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          setIsPlaying(false);
-        });
-    }
-  }, [isPlaying]);
-
-  // Track real video time updates
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setDuration(videoRef.current.duration);
-    }
-  };
 
   // Secondary tiles: use poster of non-placeholder Motion projects, or flat fallback tiles
   const nonPlaceholderMotion = PROJECTS.filter(
@@ -191,9 +136,6 @@ export const Showreel: React.FC = () => {
                   preload="metadata"
                   poster="/reel/poster.webp" // TODO: replace /public/reel/*
                   aria-label="Cartesyx Studio showreel"
-                  onTimeUpdate={handleTimeUpdate}
-                  onLoadedMetadata={handleLoadedMetadata}
-                  onEnded={() => setIsPlaying(false)}
                   className="w-full h-full object-cover"
                 >
                   {shouldLoadSources && (
@@ -206,56 +148,6 @@ export const Showreel: React.FC = () => {
                     </>
                   )}
                 </video>
-
-                {/* Overlaid Controls: bottom-left, 16px from edges */}
-                <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
-                  {/* 36px round button with >= 44px hit area */}
-                  <button
-                    type="button"
-                    onClick={handleTogglePlay}
-                    aria-label={isPlaying ? 'Pause showreel' : 'Play showreel'}
-                    className="relative w-11 h-11 flex items-center justify-center -m-1 cursor-pointer focus-visible:outline-2 focus-visible:outline-focus-ring focus-visible:outline-offset-2"
-                  >
-                    <span className="w-9 h-9 rounded-full bg-ink text-canvas dark:bg-canvas dark:text-ink flex items-center justify-center transition-colors">
-                      {isPlaying ? (
-                        /* Pause Icon */
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-hidden="true"
-                        >
-                          <rect x="2" y="1" width="3" height="10" rx="1" fill="currentColor" />
-                          <rect x="7" y="1" width="3" height="10" rx="1" fill="currentColor" />
-                        </svg>
-                      ) : (
-                        /* Play Icon */
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-hidden="true"
-                        >
-                          <path d="M3.5 2.5L9.5 6L3.5 9.5V2.5Z" fill="currentColor" />
-                        </svg>
-                      )}
-                    </span>
-                  </button>
-
-                  {/* Timecode Pill: 28px high, tabular-nums, white at 90% */}
-                  <div
-                    className="h-7 rounded-full px-3 bg-[rgba(20,20,20,0.6)] flex items-center select-none"
-                    aria-hidden="true"
-                  >
-                    <span className="text-[14px] font-[400] text-white/90 tabular-nums tracking-[0.2px]">
-                      {formatTime(currentTime)} / {formatTime(duration)}
-                    </span>
-                  </div>
-                </div>
               </div>
 
               {/* Row of 3 Secondary Tiles (ratio 3:2, radius 24px, 16px gap, cropped by bottom) */}
