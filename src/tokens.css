@@ -397,18 +397,19 @@ p {
 }
 
 /* Service card label:
-   < 1024px: 15px, w450
-   >= 1024px: 16px, w450 */
+   < 768px: 24px, w450, 1.2
+   >= 768px: 20px, w450, 1.2 */
 .type-service-card-label {
-  font-size: 15px;
+  font-size: 24px;
   font-weight: 450;
-  line-height: 1.38;
-  letter-spacing: 0.2px;
+  line-height: 1.2;
+  letter-spacing: 0px;
+  text-align: center;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .type-service-card-label {
-    font-size: 16px;
+    font-size: 20px;
   }
 }
 
@@ -535,15 +536,26 @@ p {
   background-color: var(--showreel-tile-bg);
 }
 
-/* Mobbin Services Card (5:4 aspect ratio, 32px radius, flat background) */
+/* Mobbin Services Card (350:331 mobile, 5:4 desktop, 32px radius, flat background) */
 .service-mobbin-card {
   position: relative;
-  aspect-ratio: 5 / 4;
+  aspect-ratio: 350 / 331;
   border-radius: 32px;
   overflow: hidden;
   background-color: var(--color-surface-tint);
   border: 0 solid transparent;
   transition: background-color 150ms ease;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  row-gap: 32px;
+  padding: 20px 0 0 0;
+  container-type: inline-size;
+}
+
+@media (min-width: 768px) {
+  .service-mobbin-card {
+    aspect-ratio: 5 / 4;
+  }
 }
 
 .dark .service-mobbin-card {
@@ -558,6 +570,16 @@ p {
 
 .dark .service-mobbin-card-linked:hover {
   background-color: var(--service-card-hover-tint);
+}
+
+/* Video editing button wrapper */
+.service-video-button {
+  border-radius: 16px 16px 0 0;
+}
+
+.service-video-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
 }
 
 /* Art keyframe animations */
@@ -582,15 +604,6 @@ p {
   }
 }
 
-@keyframes unityCubeSpin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(90deg);
-  }
-}
-
 /* Trigger animation only on hover or focus-within of parent card */
 .group\/card:hover .art-motion-playhead,
 .group\/card:focus-within .art-motion-playhead {
@@ -602,15 +615,9 @@ p {
   animation: motionCircleRun 4s ease-in-out forwards;
 }
 
-.group\/card:hover .art-unity-cube,
-.group\/card:focus-within .art-unity-cube {
-  animation: unityCubeSpin 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .art-motion-playhead,
-  .art-motion-circle,
-  .art-unity-cube {
+  .art-motion-circle {
     animation: none !important;
   }
 }

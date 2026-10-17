@@ -2,7 +2,7 @@ import React from 'react';
 import { VisualDesignArt } from './art/VisualDesignArt';
 import { MotionGraphicsArt } from './art/MotionGraphicsArt';
 import { WebDevelopmentArt } from './art/WebDevelopmentArt';
-import { UnityArt } from './art/UnityArt';
+import { VideoEditingCard } from './VideoEditingCard';
 
 export interface ServiceCardData {
   id: string;
@@ -11,6 +11,7 @@ export interface ServiceCardData {
   description: string;
   hasPortfolio: boolean;
   filterTarget?: 'Web' | 'Motion';
+  showSoon?: boolean;
 }
 
 export interface ServiceCardProps {
@@ -19,6 +20,14 @@ export interface ServiceCardProps {
 }
 
 export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilter }) => {
+  if (service.id === 'video-editing') {
+    return (
+      <li className="list-none w-full">
+        <VideoEditingCard service={service} />
+      </li>
+    );
+  }
+
   const isLinked = service.hasPortfolio && !!service.filterTarget;
   const descriptionId = `service-desc-${service.id}`;
 
@@ -30,8 +39,6 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
         return <MotionGraphicsArt />;
       case 'web-development':
         return <WebDevelopmentArt />;
-      case 'unity':
-        return <UnityArt />;
       default:
         return null;
     }
@@ -45,17 +52,17 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
 
   const cardContent = (
     <div
-      className={`service-mobbin-card group/card w-full h-full flex flex-col justify-between items-center ${
+      className={`service-mobbin-card group/card w-full h-full ${
         isLinked ? 'service-mobbin-card-linked cursor-pointer' : 'cursor-default'
       }`}
     >
-      {/* Centered label at top, 24px from top edge (15px w450 mobile, 16px w450 desktop) */}
-      <div className="pt-6 px-6 z-10 flex items-center justify-center">
-        <h3 className="type-service-card-label text-ink text-center inline-flex items-center">
+      {/* Centered label at top */}
+      <div className="w-full flex items-center justify-center z-10">
+        <h3 className="type-service-card-label text-ink text-center inline-flex items-baseline">
           <span>{service.title}</span>
-          {!service.hasPortfolio && (
+          {service.showSoon && (
             <span
-              className="ml-2 text-[12px] font-[500] text-[var(--service-soon-text)] select-none"
+              className="ml-2 text-[14px] font-[500] text-[var(--service-soon-text)] select-none"
               aria-label="Portfolio coming soon"
             >
               Soon
@@ -69,9 +76,9 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
         {service.description}
       </p>
 
-      {/* Visual sitting in the lower ~70% of card, cropped at bottom */}
-      <div className="w-full flex-1 flex items-end justify-center overflow-hidden px-4 sm:px-6 pb-0 pt-1">
-        <div className="w-full max-w-[440px] transform translate-y-4 md:translate-y-6 transition-transform duration-200">
+      {/* Visual starting at the media top line, cropped at bottom */}
+      <div className="service-card-media row-start-2 w-full h-full overflow-hidden flex flex-col items-center justify-start">
+        <div className="w-full max-w-[440px]">
           {renderVisual()}
         </div>
       </div>

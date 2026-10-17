@@ -7,12 +7,22 @@ export interface ServicesProps {
 
 const SERVICES_DATA: ServiceCardData[] = [
   {
+    id: 'video-editing',
+    title: 'Video Editing',
+    fullTitle: 'Video Editing',
+    description:
+      'Cuts, pacing, color, and sound sync for event recaps, promo videos, and social clips.', // TODO: confirm wording
+    hasPortfolio: false,
+    showSoon: false,
+  },
+  {
     id: 'visual-design',
     title: 'Visual Design',
     fullTitle: 'Visual Design (DJ & Event)',
     description:
       'Stage graphics, club visual packs, and live visual sets synchronized to audio. Built for touring DJs, promoters, and music venues. Specializing in DJ and event visuals.',
     hasPortfolio: false,
+    showSoon: true,
   },
   {
     id: 'motion-graphics',
@@ -22,6 +32,7 @@ const SERVICES_DATA: ServiceCardData[] = [
       'Title sequences, brand idents, product reveals, and kinetic typography. Delivered as broadcast-ready files and real-time loops.',
     hasPortfolio: true,
     filterTarget: 'Motion',
+    showSoon: false,
   },
   {
     id: 'web-development',
@@ -31,14 +42,7 @@ const SERVICES_DATA: ServiceCardData[] = [
       'Fast portfolio sites, editorial archives, and custom front-end applications. Clean TypeScript code, accessible semantics, and zero bloat.',
     hasPortfolio: true,
     filterTarget: 'Web',
-  },
-  {
-    id: 'unity',
-    title: 'Unity',
-    fullTitle: 'Unity',
-    description:
-      'Interactive 3D environments, real-time stage installations, and visual simulations. Configured for high-framerate performance on venue hardware.',
-    hasPortfolio: false,
+    showSoon: false,
   },
 ];
 
@@ -53,8 +57,8 @@ export const Services: React.FC<ServicesProps> = ({ onSelectFilter }) => {
           </h2>
         </div>
 
-        {/* 2x2 Grid on desktop (>=768px), 1 column on mobile, 24px gap */}
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 p-0 m-0">
+        {/* 2x2 Grid on desktop (>=768px), 1 column on mobile, 20px gap mobile / 24px gap desktop */}
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 items-stretch p-0 m-0">
           {SERVICES_DATA.map((service) => (
             <ServiceCard
               key={service.id}

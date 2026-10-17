@@ -1,8 +1,8 @@
 export type ProjectDiscipline =
-  | 'Web Development'
-  | 'Motion Graphics'
+  | 'Video Editing'
   | 'Visual Design'
-  | 'Unity';
+  | 'Motion Graphics'
+  | 'Web Development';
 
 export type FilterCategory = 'All' | 'Web' | 'Motion';
 
@@ -36,10 +36,10 @@ export const STUDIO_CONFIG = {
   fullName: 'Cartesyx Studio',
   contactEmail: 'contact@example.com', // TODO: replace
   disciplines: [
+    'Video Editing',
     'Visual Design (DJ & Event)',
     'Motion Graphics',
     'Web Development',
-    'Unity',
   ],
   socials: [
     { label: 'GitHub', url: 'https://github.com/TODO' }, // TODO: replace
@@ -145,31 +145,31 @@ export interface ServiceItem {
 
 export const SERVICES: ServiceItem[] = [
   {
-    id: 'visual-design',
+    id: 'video-editing',
     index: '01',
+    title: 'Video Editing',
+    description: 'Cuts, pacing, color, and sound sync for event recaps, promo videos, and social clips.', // TODO: confirm wording
+    status: 'Case studies coming soon',
+  },
+  {
+    id: 'visual-design',
+    index: '02',
     title: 'Visual Design (DJ & Event)',
     description: 'Stage graphics, club visual packs, and live visual sets synchronized to audio. Built for touring DJs, promoters, and music venues.',
     status: 'Case studies coming soon',
   },
   {
     id: 'motion-graphics',
-    index: '02',
+    index: '03',
     title: 'Motion Graphics',
     description: 'Title sequences, brand idents, product reveals, and kinetic typography. Delivered as broadcast-ready files and real-time loops.',
     status: 'Portfolio available',
   },
   {
     id: 'web-development',
-    index: '03',
+    index: '04',
     title: 'Web Development',
     description: 'Fast portfolio sites, editorial archives, and custom front-end applications. Clean TypeScript code, accessible semantics, and zero bloat.',
     status: 'Portfolio available',
-  },
-  {
-    id: 'unity',
-    index: '04',
-    title: 'Unity',
-    description: 'Interactive 3D environments, real-time stage installations, and visual simulations. Configured for high-framerate performance on venue hardware.',
-    status: 'Case studies coming soon',
   },
 ];

@@ -243,7 +243,7 @@ export const Nav: React.FC<NavProps> = ({
             Start a project
           </Button>
           <p className="type-caption-xs text-body text-center">
-            Cartesyx Studio · Visual Design, Motion, Web &amp; Unity
+            Cartesyx Studio · Visual Design, Motion, Web &amp; Video Editing
           </p>
         </div>
       </div>,
