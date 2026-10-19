@@ -19,19 +19,24 @@
   --color-inverse-muted: #9E9E9E;
   --color-inverse-border: #353535;
 
-  /* Typography Weights - Deliberate deviation: DESIGN.md's weights (652/600/456) were measured on Saans.
-     Geist variable renders optically heavier than Saans, so weights are mapped to match the optical weight of mobbin.com:
-     - display: 652 -> 560
-     - strong (buttons, card titles): 600 -> 500
-     - regular body: 400 stays 400
-     - caption/small: 456 -> 420
-     - service card label: 450
+  /* Typography Weights - Geist variable supports 100-900.
+     Approved weight palette:
+     - display: 560 (optical match for mobbin display 652)
+     - strong: 500 (buttons, card titles)
+     - medium: 500 (service card labels, badge "Soon", filter bar)
+     - caption/small: 420
+     - regular: 400 (body copy)
+     Note: 450 was an intermediate optical weight and is now retired.
   */
   --weight-display: 560;
   --weight-strong: 500;
-  --weight-medium: 450;
+  --weight-medium: 500;
   --weight-caption: 420;
   --weight-regular: 400;
+
+  /* Service Card Label Tokens */
+  --label-size: 20px;
+  --label-weight: 500;
 
   /* Spacing */
   --space-xxs: 8px;
@@ -77,6 +82,9 @@
   --showreel-tile-bg: rgba(64, 64, 64, 0.12);
   --showreel-timecode-bg: rgba(20, 20, 20, 0.6);
   --showreel-timecode-text: rgba(255, 255, 255, 0.9);
+
+  /* Site Window Shadow (Motion Graphics & Visual Design cards) */
+  --shadow-window: 0 10px 30px rgba(20, 20, 20, 0.08);
 }
 
 .dark {
@@ -119,6 +127,9 @@
   --showreel-tile-bg: #292929;
   --showreel-timecode-bg: rgba(20, 20, 20, 0.6);
   --showreel-timecode-text: rgba(255, 255, 255, 0.9);
+
+  /* Site Window Shadow */
+  --shadow-window: none;
 }
 
 @theme {
@@ -351,7 +362,7 @@ p {
 
 .type-body-md-strong {
   font-size: 16px;
-  font-weight: 450;
+  font-weight: 500;
   line-height: 1.38;
   letter-spacing: 0.2px;
 }
@@ -397,21 +408,14 @@ p {
 }
 
 /* Service card label:
-   < 768px: 20px, w450, 1.2
-   >= 768px: 18px, w450, 1.2 */
+   20px, w500, 1.2 across all breakpoints */
 .type-service-card-label {
-  font-size: 20px;
-  font-weight: 450;
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
   line-height: 1.2;
   letter-spacing: 0px;
   text-align: center;
   text-wrap: balance;
-}
-
-@media (min-width: 768px) {
-  .type-service-card-label {
-    font-size: 18px;
-  }
 }
 
 /* Global focus indicator */
@@ -595,7 +599,7 @@ p {
   border-radius: clamp(14px, 12.5cqw, 24px) clamp(14px, 12.5cqw, 24px) 0 0;
   overflow: hidden;
   isolation: isolate;
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  -webkit-mask-image: -webkit-radial-gradient(white, black); /* allow-gradient: safari-mask */
   transform: translateZ(0);
   background-color: var(--color-surface-tint);
 }
@@ -612,6 +616,36 @@ p {
 .service-video-button:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: -4px;
+}
+
+/* Site Window Media (Motion Graphics & Visual Design cards) */
+.site-window {
+  position: absolute;
+  top: max(23.4cqw, 80px);
+  left: 11.6cqw;
+  width: 96cqw;
+  aspect-ratio: 16 / 10;
+  border-radius: clamp(6px, 2cqw, 14px);
+  overflow: hidden;
+  background-color: var(--color-surface-tint);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-window);
+}
+
+.dark .site-window {
+  background-color: var(--color-surface-alt);
+  border: 1px solid #353535;
+  box-shadow: var(--shadow-window);
+}
+
+@media (min-width: 768px) {
+  .site-window {
+    top: max(20.1cqw, 78px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(82cqw, calc((74cqw - max(20.1cqw, 78px)) * 1.6));
+    aspect-ratio: 16 / 10;
+  }
 }
 
 /* Web Development Marquee */

@@ -135,7 +135,7 @@ export const WebDevCard: React.FC<WebDevCardProps> = ({ service }) => {
     >
       {/* Centered label at top */}
       <div className="w-full flex items-center justify-center z-10">
-        <h3 className="type-service-card-label text-ink text-center inline-flex items-center">
+        <h3 className="type-service-card-label text-ink text-center inline-flex items-baseline">
           <span>{service.title}</span>
         </h3>
       </div>

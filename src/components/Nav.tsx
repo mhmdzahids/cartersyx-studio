@@ -59,6 +59,7 @@ export const Nav: React.FC<NavProps> = ({
 
   return (
     <>
+      {/* design-ok: sticky nav backdrop-blur */}
       <header className="sticky top-0 z-50 w-full h-[92px] bg-[var(--color-nav-bg)] backdrop-blur-md border-b border-border transition-colors duration-200">
       <div className="max-w-content mx-auto h-full px-5 flex items-center justify-between">
         {/* Typographic Wordmark & Logo */}

@@ -1,8 +1,7 @@
 import React from 'react';
-import { VisualDesignArt } from './art/VisualDesignArt';
-import { MotionGraphicsArt } from './art/MotionGraphicsArt';
 import { VideoEditingCard } from './VideoEditingCard';
 import { WebDevCard } from './WebDevCard';
+import { SiteWindowMedia } from './SiteWindowMedia';
 
 export interface ServiceCardData {
   id: string;
@@ -39,17 +38,6 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
   const isLinked = service.hasPortfolio && !!service.filterTarget;
   const descriptionId = `service-desc-${service.id}`;
 
-  const renderVisual = () => {
-    switch (service.id) {
-      case 'visual-design':
-        return <VisualDesignArt />;
-      case 'motion-graphics':
-        return <MotionGraphicsArt />;
-      default:
-        return null;
-    }
-  };
-
   const handleLinkClick = () => {
     if (service.filterTarget && onSelectFilter) {
       onSelectFilter(service.filterTarget);
@@ -82,12 +70,8 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelectFilte
         {service.description}
       </p>
 
-      {/* Visual starting at the media top line, cropped at bottom */}
-      <div className="service-card-media row-start-2 w-full h-full overflow-hidden flex flex-col items-center justify-start">
-        <div className="w-full max-w-[440px]">
-          {renderVisual()}
-        </div>
-      </div>
+      {/* Media: Landscape site window floating block */}
+      <SiteWindowMedia serviceId={service.id} />
     </div>
   );
 

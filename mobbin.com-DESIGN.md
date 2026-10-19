@@ -1,3 +1,5 @@
+> Project overrides live in DESIGN.cartesyx.md and take precedence over everything below. Read it first.
+
 ---
 version: alpha
 name: Mobbin

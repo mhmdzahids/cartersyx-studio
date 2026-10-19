@@ -174,7 +174,7 @@ export const WebDevCarousel: React.FC<WebDevCarouselProps> = ({
     );
   }
 
-  // Normal mode: Automatic infinite seamless marquee
+  // Normal mode: Automatic infinite continuous marquee
   const slideCount = WEB_SLIDES.length;
   const marqueeDur = `${slideCount * 7}s`;
 
@@ -231,7 +231,7 @@ export const WebDevCarousel: React.FC<WebDevCarouselProps> = ({
           ))}
         </div>
 
-        {/* Set 2: Exact duplicate for seamless infinite loop */}
+        {/* Set 2: Exact duplicate for continuous infinite loop */}
         <div className="marquee__set" aria-hidden="true" inert>
           {WEB_SLIDES.map((slide, index) => (
             <div key={`s2-${slide.id}`} className="marquee__slide">
