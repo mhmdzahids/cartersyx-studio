@@ -31,7 +31,7 @@ const SERVICES_DATA: ServiceCardData[] = [
     description:
       'Stage graphics, club visual packs, and live visual sets synchronized to audio. Built for touring DJs, promoters, and music venues. Specializing in DJ and event visuals.',
     hasPortfolio: false,
-    showSoon: true,
+    showSoon: false,
   },
   {
     id: 'motion-graphics',

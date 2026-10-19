@@ -99,7 +99,7 @@
 | :---: | :--- | :--- | :--- | :---: | :--- |
 | **1** | **Video Editing** | `<ScreenMedia>` | `SERVICES_DATA[0]` | Phone `9:14` wrapper, `9:16` video | Autoplays muted on scroll/intersection; pauses when off-screen or prefers-reduced-motion; clicking the video does nothing (no visible play button). Width: 45% mobile, 41% desktop. |
 | **2** | **Web Development** | `<WebDevCarousel>` | `src/data/webSlides.ts` | Phone `9:14` wrappers, `9:16` content | Smooth, continuous infinite marquee to the left; duplicate set for continuous loop; does **NOT** pause on hover; pauses on touch-hold, keyboard focus, off-screen, or accessible button. |
-| **3** | **Visual Design** | `<SiteWindowMedia>` | `src/data/siteCards.ts` | Desktop window `16:10` | Floating browser window (not cropped at bottom) with `--shadow-window` (light mode); contains "Soon" badge (`13px`, `w500`, baseline-aligned). |
+| **3** | **Visual Design** | `<SiteWindowMedia>` | `src/data/siteCards.ts` | Desktop window `16:10` | Floating browser window (not cropped at bottom) with `--shadow-window` (light mode); looping video preview. |
 | **4** | **Motion Graphics** | `<SiteWindowMedia>` | `src/data/siteCards.ts` | Desktop window `16:10` | Floating browser window with looping video preview; linked card navigating to `#work` with Motion filter. |
 
 ---
