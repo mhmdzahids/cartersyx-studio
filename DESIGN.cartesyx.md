@@ -30,7 +30,7 @@
 6. **Radius Palette (Exactly 4 Values)**:
    - **Card Radius**: `clamp(20px, 6.2cqw, 32px)` (mobile ~20px to 24px, desktop up to 32px; used on `.service-mobbin-card` and `ProjectCard`).
    - **Media Radius (Phone Screens)**: `clamp(14px, 12.5cqw, 24px) clamp(14px, 12.5cqw, 24px) 0 0` (top corners only; flush with card bottom; used on `.screen-media__screen` in Video Editing and Web Dev carousel).
-   - **Window Radius (Desktop Windows)**: `clamp(6px, 2cqw, 14px)` (all 4 corners; used on `.site-window` in Motion Graphics and Visual Design).
+   - **Window Radius (Desktop Windows)**: `clamp(12px, 3.5cqw, 20px)` (all 4 corners; used on `.site-window` in Motion Graphics and Visual Design).
    - **Badge / Pill Radius**: `9999px` (fully rounded; used on `.btn-pill`, filter pills, and interactive buttons).
 7. **Color System**:
    - **Ink**: Light `#141414` | Dark `#F6F6F6`
@@ -143,7 +143,7 @@
 ## 7. Anti-Slop Checklist for Agents
 
 Before committing any UI code, verify:
-- [ ] **No Random Radii**: Only use the 4 approved radii (`clamp(20px, 6.2cqw, 32px)`, `clamp(14px, 12.5cqw, 24px) ...`, `clamp(6px, 2cqw, 14px)`, `9999px`).
+- [ ] **No Random Radii**: Only use the 4 approved radii (`clamp(20px, 6.2cqw, 32px)`, `clamp(14px, 12.5cqw, 24px) ...`, `clamp(12px, 3.5cqw, 20px)`, `9999px`).
 - [ ] **No Shadows**: No `shadow-*` utility classes or CSS `box-shadow` (except `--shadow-window`).
 - [ ] **No Gradients**: No `bg-gradient-*`, `linear-gradient`, or `radial-gradient` (except Safari mask bug).
 - [ ] **No Blur**: No `backdrop-blur-*` or CSS `blur()` (except approved header escape hatch).

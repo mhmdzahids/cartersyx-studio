@@ -625,7 +625,7 @@ p {
   left: 11.6cqw;
   width: 96cqw;
   aspect-ratio: 16 / 10;
-  border-radius: clamp(6px, 2cqw, 14px);
+  border-radius: clamp(12px, 3.5cqw, 20px);
   overflow: hidden;
   background-color: var(--color-surface-tint);
   border: 1px solid var(--color-border);
