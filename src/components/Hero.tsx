@@ -12,8 +12,8 @@ export const Hero: React.FC = () => {
           </h1>
 
           {/* Subheadline: plain regular weight in #707070 */}
-          <p className="type-hero-subtitle max-w-[560px] mx-auto mb-8 text-center">
-            Cartesyx Studio is a small studio for motion graphics, web development, event and DJ visuals, and video editing.
+          <p className="type-hero-subtitle max-w-[580px] mx-auto mb-8 text-center">
+            Cartesyx is an independent studio for motion graphics, web development, stage visuals, and video editing.
           </p>
 
           {/* Action pills */}

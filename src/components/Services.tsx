@@ -11,7 +11,7 @@ const SERVICES_DATA: ServiceCardData[] = [
     title: 'Video Editing',
     fullTitle: 'Video Editing',
     description:
-      'Cuts, pacing, color, and sound sync for event recaps, promo videos, and social clips.', // TODO: confirm wording
+      'Pacing, color grading, and audio sync for event recaps, commercials, and short-form video.',
     hasPortfolio: false,
     showSoon: false,
   },
@@ -20,7 +20,7 @@ const SERVICES_DATA: ServiceCardData[] = [
     title: 'Web Development',
     fullTitle: 'Web Development',
     description:
-      'Fast portfolio sites, editorial archives, and custom front-end applications. Clean TypeScript code, accessible semantics, and zero bloat.',
+      'Fast portfolios, digital archives, and custom web applications. Clean TypeScript code with zero bloat.',
     hasPortfolio: false,
     showSoon: false,
   },
@@ -29,7 +29,7 @@ const SERVICES_DATA: ServiceCardData[] = [
     title: 'Visual Design',
     fullTitle: 'Visual Design (DJ & Event)',
     description:
-      'Stage graphics, club visual packs, and live visual sets synchronized to audio. Built for touring DJs, promoters, and music venues. Specializing in DJ and event visuals.',
+      'Audio-reactive stage graphics, club visual packs, and live sets for touring artists and music venues.',
     hasPortfolio: false,
     showSoon: false,
   },
@@ -38,7 +38,7 @@ const SERVICES_DATA: ServiceCardData[] = [
     title: 'Motion Graphics',
     fullTitle: 'Motion Graphics',
     description:
-      'Title sequences, brand idents, product reveals, and kinetic typography. Delivered as broadcast-ready files and real-time loops.',
+      'Title sequences, brand idents, and kinetic typography delivered as broadcast-ready files and real-time loops.',
     hasPortfolio: true,
     filterTarget: 'Motion',
     showSoon: false,
@@ -52,7 +52,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectFilter }) => {
         {/* Centered two-line section header (no divider, no eyebrow) */}
         <div className="text-center mb-16 max-w-[720px] mx-auto">
           <h2 className="type-display-section text-ink">
-            From the stage screen to the website, in one studio.
+            Design, motion, and code for every screen.
           </h2>
         </div>
 

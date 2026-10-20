@@ -140,9 +140,9 @@ export const Showreel: React.FC = () => {
                 >
                   {shouldLoadSources && (
                     <>
-                      {/* TODO: replace /public/reel/* */}
+                      {/* Cloudinary CDN with f_auto,q_auto for optimal video delivery */}
                       <source
-                        src="https://res.cloudinary.com/plqnfhat/video/upload/v1792145016/cartersyx-studio_2026-10-16_12-20-50.mp4"
+                        src="https://res.cloudinary.com/plqnfhat/video/upload/f_auto,q_auto/v1792145016/cartersyx-studio_2026-10-16_12-20-50.mp4"
                         type="video/mp4"
                       />
                     </>
