@@ -87,6 +87,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onSelectProje
           <img
             src={project.media.posterUrl}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
         )}

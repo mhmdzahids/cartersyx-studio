@@ -148,28 +148,28 @@ export const SERVICES: ServiceItem[] = [
     id: 'video-editing',
     index: '01',
     title: 'Video Editing',
-    description: 'Cuts, pacing, color, and sound sync for event recaps, promo videos, and social clips.', // TODO: confirm wording
+    description: 'Pacing, color grading, and audio sync for event recaps, commercials, and short-form video.',
     status: 'Case studies coming soon',
   },
   {
     id: 'visual-design',
     index: '02',
     title: 'Visual Design (DJ & Event)',
-    description: 'Stage graphics, club visual packs, and live visual sets synchronized to audio. Built for touring DJs, promoters, and music venues.',
+    description: 'Audio-reactive stage graphics, club visual packs, and live sets for touring artists and music venues.',
     status: 'Case studies coming soon',
   },
   {
     id: 'motion-graphics',
     index: '03',
     title: 'Motion Graphics',
-    description: 'Title sequences, brand idents, product reveals, and kinetic typography. Delivered as broadcast-ready files and real-time loops.',
+    description: 'Title sequences, brand idents, and kinetic typography delivered as broadcast-ready files and real-time loops.',
     status: 'Portfolio available',
   },
   {
     id: 'web-development',
     index: '04',
     title: 'Web Development',
-    description: 'Fast portfolio sites, editorial archives, and custom front-end applications. Clean TypeScript code, accessible semantics, and zero bloat.',
+    description: 'Fast portfolios, digital archives, and custom web applications. Clean TypeScript code with zero bloat.',
     status: 'Portfolio available',
   },
 ];

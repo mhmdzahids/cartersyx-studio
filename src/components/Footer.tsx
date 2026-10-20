@@ -14,13 +14,13 @@ export const Footer: React.FC = () => {
             <h2 className="type-display-footer text-inverse-text mb-8">
               Have a project in mind?
             </h2>
-            {/* White pill "Email us" */}
+            {/* White pill CTA */}
             <a
-              href={`mailto:${STUDIO_CONFIG.contactEmail}`} // TODO: replace
-              className="btn-pill bg-white text-[#141414] hover:opacity-90 active:opacity-80 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
-              aria-label="Email Cartesyx Studio"
+              href={`mailto:${STUDIO_CONFIG.contactEmail}`}
+              className="btn-pill bg-[var(--footer-btn-bg)] text-[var(--footer-btn-text)] font-medium hover:opacity-90 active:opacity-80 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
+              aria-label="Start a conversation with Cartesyx Studio"
             >
-              Email us
+              Start a conversation
             </a>
           </div>
         </div>

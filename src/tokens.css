@@ -85,6 +85,10 @@
 
   /* Site Window Shadow (Motion Graphics & Visual Design cards) */
   --shadow-window: 0 10px 30px rgba(20, 20, 20, 0.08);
+
+  /* Footer CTA Button Tokens (Always high-contrast white pill on dark footer) */
+  --footer-btn-bg: #FFFFFF;
+  --footer-btn-text: #141414;
 }
 
 .dark {
@@ -112,6 +116,8 @@
   --art-accent: #FF4B1F;
   --service-soon-text: #9E9E9E;
   --service-card-hover-tint: rgba(255, 255, 255, 0.12);
+  --footer-btn-bg: #FFFFFF;
+  --footer-btn-text: #141414;
 
   /* Card Media Tokens (Selected Work placeholder) */
   --color-card-media-bg: #1D1D1D;
