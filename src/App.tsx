@@ -8,13 +8,14 @@ import { Footer } from './components/Footer';
 import { ProjectDetail } from './components/ProjectDetail';
 
 export const App: React.FC = () => {
-  // Theme state
+  // Theme state: defaults to light (white) theme initially
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('cartesyx-theme');
       if (stored === 'dark') return true;
       if (stored === 'light') return false;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+      // Default to light (white) theme initially for visitors
+      return false;
     }
     return false;
   });
