@@ -8,7 +8,7 @@ interface CharacterMeta {
   id: CharacterId;
   name: string;
   baseSizeDesktop: number; // desktop height in px
-  baseSizeMobile: number; // mobile height in px (smaller for spacious feel)
+  baseSizeMobile: number; // mobile height in px
   aspectRatio: number;
   speed: number;
   idleRange: [number, number];
@@ -25,11 +25,11 @@ const CHARACTERS: CharacterMeta[] = [
     baseSizeDesktop: 34,
     baseSizeMobile: 22,
     aspectRatio: 1.6,
-    speed: 36,
-    idleRange: [2200, 4500],
-    walkRange: [4000, 7500],
+    speed: 38,
+    idleRange: [2000, 4200],
+    walkRange: [3800, 7200],
     stepInterval: 180,
-    zone: 'top', // Top sky floating above headline
+    zone: 'top', // Floats across top sky, comfortably lowered from top border
     greeting: 'Hello there',
   },
   {
@@ -38,11 +38,11 @@ const CHARACTERS: CharacterMeta[] = [
     baseSizeDesktop: 24,
     baseSizeMobile: 18,
     aspectRatio: 3.1,
-    speed: 46,
-    idleRange: [1800, 3800],
+    speed: 48,
+    idleRange: [1800, 3600],
     walkRange: [3000, 5500],
     stepInterval: 150,
-    zone: 'left', // Left perimeter flank
+    zone: 'left', // Left flank roaming
     greeting: 'Hi, welcome',
   },
   {
@@ -51,11 +51,11 @@ const CHARACTERS: CharacterMeta[] = [
     baseSizeDesktop: 28,
     baseSizeMobile: 20,
     aspectRatio: 1.38,
-    speed: 72,
-    idleRange: [1200, 2800],
-    walkRange: [2200, 4200],
+    speed: 74,
+    idleRange: [1200, 2600],
+    walkRange: [2200, 4000],
     stepInterval: 110,
-    zone: 'right', // Right perimeter flank
+    zone: 'right', // Right flank roaming
     greeting: 'Welcome to Cartesyx',
   },
   {
@@ -64,11 +64,11 @@ const CHARACTERS: CharacterMeta[] = [
     baseSizeDesktop: 36,
     baseSizeMobile: 24,
     aspectRatio: 1.55,
-    speed: 24,
-    idleRange: [4500, 8000],
+    speed: 26,
+    idleRange: [3500, 6500],
     walkRange: [3500, 6500],
     stepInterval: 260,
-    zone: 'bottom-left', // Bottom-left perimeter stage
+    zone: 'bottom-left', // Full bottom stage roaming, starts on left
     greeting: 'Welcome',
   },
   {
@@ -77,11 +77,11 @@ const CHARACTERS: CharacterMeta[] = [
     baseSizeDesktop: 30,
     baseSizeMobile: 20,
     aspectRatio: 1.6,
-    speed: 32,
-    idleRange: [2800, 5200],
+    speed: 34,
+    idleRange: [2400, 4800],
     walkRange: [3200, 6000],
     stepInterval: 210,
-    zone: 'bottom-right', // Bottom-right perimeter stage
+    zone: 'bottom-right', // Full bottom stage roaming, starts on right
     greeting: 'Glad you are here',
   },
 ];
@@ -118,7 +118,6 @@ export const PixelCompanions: React.FC = () => {
   const spriteWrapperRefs = useRef<Map<CharacterId, HTMLDivElement>>(new Map());
   const imgRefs = useRef<Map<CharacterId, HTMLImageElement>>(new Map());
 
-  // Layout dimensions and avoid box cache
   const dimensionsRef = useRef<{ width: number; height: number; avoidBox: AvoidBox | null }>({
     width: 1200,
     height: 600,
@@ -154,9 +153,8 @@ export const PixelCompanions: React.FC = () => {
     if (avoidEl) {
       const textRect = avoidEl.getBoundingClientRect();
       const contRect = cont.getBoundingClientRect();
-      // Safe avoidance margins around center
-      const padX = width < 768 ? 14 : 28;
-      const padY = width < 768 ? 12 : 20;
+      const padX = width < 768 ? 14 : 26;
+      const padY = width < 768 ? 12 : 18;
 
       avoidBox = {
         left: textRect.left - contRect.left - padX,
@@ -221,7 +219,7 @@ export const PixelCompanions: React.FC = () => {
     return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, []);
 
-  // Calculate designated roaming territory for each surrounding quadrant
+  // Calculate roaming domain for each character with generous random movement
   const getZoneBounds = useCallback(
     (
       meta: CharacterMeta,
@@ -234,75 +232,90 @@ export const PixelCompanions: React.FC = () => {
       const isMobile = width < 768;
 
       if (!avoidBox) {
-        return { minX: 12, maxX: width - spriteW - 12, minY: 12, maxY: height - spriteH - 12 };
+        return { minX: 16, maxX: width - spriteW - 16, minY: 16, maxY: height - spriteH - 16 };
       }
 
       switch (meta.zone) {
-        case 'top':
-          // Top sky spanning across upper width
-          return {
-            minX: isMobile ? 16 : width * 0.15,
-            maxX: isMobile ? width - spriteW - 16 : width * 0.85 - spriteW,
-            minY: 10,
-            maxY: Math.max(14, avoidBox.top - spriteH - 8),
-          };
-
-        case 'left':
-          if (!isMobile && avoidBox.left > spriteW + 36) {
-            // Desktop: left perimeter flank
-            return {
-              minX: 16,
-              maxX: Math.max(20, avoidBox.left - spriteW - 14),
-              minY: Math.max(10, avoidBox.top + 10),
-              maxY: Math.min(height - spriteH - 10, avoidBox.bottom - 10),
-            };
-          }
-          // Mobile: upper-left sky pocket (away from center)
-          return {
-            minX: 14,
-            maxX: Math.max(20, width * 0.40 - spriteW),
-            minY: 12,
-            maxY: Math.max(16, avoidBox.top - spriteH - 6),
-          };
-
-        case 'right':
-          if (!isMobile && width - avoidBox.right > spriteW + 36) {
-            // Desktop: right perimeter flank
-            return {
-              minX: Math.min(width - spriteW - 20, avoidBox.right + 14),
-              maxX: width - spriteW - 16,
-              minY: Math.max(10, avoidBox.top + 10),
-              maxY: Math.min(height - spriteH - 10, avoidBox.bottom - 10),
-            };
-          }
-          // Mobile: upper-right sky pocket (away from center)
-          return {
-            minX: Math.min(width - spriteW - 16, width * 0.60),
-            maxX: width - spriteW - 14,
-            minY: 12,
-            maxY: Math.max(16, avoidBox.top - spriteH - 6),
-          };
-
-        case 'bottom-left':
-          // Bottom-left stage (away from center buttons)
+        case 'top': {
+          // Top character (Axolotl): lowered down nicely from the top border
+          const topMinY = isMobile ? 24 : Math.max(38, avoidBox.top * 0.36);
+          const topMaxY = Math.max(topMinY + 6, avoidBox.top - spriteH - (isMobile ? 8 : 14));
           return {
             minX: 16,
-            maxX: Math.max(24, isMobile ? width * 0.44 : width * 0.45),
-            minY: avoidBox.bottom + (isMobile ? 14 : 20),
-            maxY: height - spriteH - (isMobile ? 10 : 14),
+            maxX: width - spriteW - 16, // full horizontal random roaming in upper sky
+            minY: topMinY,
+            maxY: topMaxY,
           };
+        }
 
-        case 'bottom-right':
-          // Bottom-right stage (away from center buttons)
+        case 'left': {
+          if (!isMobile && avoidBox.left > spriteW + 28) {
+            // Desktop: left perimeter flank with free random movement
+            return {
+              minX: 14,
+              maxX: Math.max(20, avoidBox.left - spriteW - 12),
+              minY: Math.max(24, avoidBox.top + 8),
+              maxY: Math.min(height - spriteH - 12, avoidBox.bottom - 8),
+            };
+          }
+          // Mobile: upper-left sky pocket with free left-right roam
+          const mobileTopMinY = 22;
+          const mobileTopMaxY = Math.max(mobileTopMinY + 4, avoidBox.top - spriteH - 8);
           return {
-            minX: Math.min(width - spriteW - 24, isMobile ? width * 0.56 : width * 0.55),
-            maxX: width - spriteW - 16,
-            minY: avoidBox.bottom + (isMobile ? 14 : 20),
-            maxY: height - spriteH - (isMobile ? 10 : 14),
+            minX: 12,
+            maxX: Math.max(20, width * 0.44 - spriteW),
+            minY: mobileTopMinY,
+            maxY: mobileTopMaxY,
           };
+        }
+
+        case 'right': {
+          if (!isMobile && width - avoidBox.right > spriteW + 28) {
+            // Desktop: right perimeter flank with free random movement
+            return {
+              minX: Math.min(width - spriteW - 20, avoidBox.right + 12),
+              maxX: width - spriteW - 14,
+              minY: Math.max(24, avoidBox.top + 8),
+              maxY: Math.min(height - spriteH - 12, avoidBox.bottom - 8),
+            };
+          }
+          // Mobile: upper-right sky pocket with free left-right roam
+          const mobileTopMinY = 22;
+          const mobileTopMaxY = Math.max(mobileTopMinY + 4, avoidBox.top - spriteH - 8);
+          return {
+            minX: Math.min(width - spriteW - 16, width * 0.56),
+            maxX: width - spriteW - 12,
+            minY: mobileTopMinY,
+            maxY: mobileTopMaxY,
+          };
+        }
+
+        case 'bottom-left': {
+          // Bottom stage: free random movement across full width below the buttons
+          const bottomMinY = avoidBox.bottom + (isMobile ? 14 : 18);
+          const bottomMaxY = height - spriteH - (isMobile ? 8 : 14);
+          return {
+            minX: 16,
+            maxX: width - spriteW - 16,
+            minY: bottomMinY,
+            maxY: bottomMaxY,
+          };
+        }
+
+        case 'bottom-right': {
+          // Bottom stage: free random movement across full width below the buttons
+          const bottomMinY = avoidBox.bottom + (isMobile ? 14 : 18);
+          const bottomMaxY = height - spriteH - (isMobile ? 8 : 14);
+          return {
+            minX: 16,
+            maxX: width - spriteW - 16,
+            minY: bottomMinY,
+            maxY: bottomMaxY,
+          };
+        }
 
         default:
-          return { minX: 12, maxX: width - spriteW - 12, minY: 12, maxY: height - spriteH - 12 };
+          return { minX: 16, maxX: width - spriteW - 16, minY: 16, maxY: height - spriteH - 16 };
       }
     },
     []
@@ -322,28 +335,29 @@ export const PixelCompanions: React.FC = () => {
       const spriteW = currentSize * meta.aspectRatio;
       const spriteH = currentSize;
 
-      // Initial placement in perimeter domain
       let initX = width * 0.5;
       let initY = height * 0.8;
 
       if (meta.zone === 'top') {
         initX = width * 0.45;
-        initY = 16;
+        // Lowered down nicely from top border
+        initY = isMobile ? 26 : 52;
       } else if (meta.zone === 'left') {
-        initX = 24;
-        initY = isMobile ? 18 : height * 0.42;
+        initX = 20;
+        initY = isMobile ? 24 : height * 0.42;
       } else if (meta.zone === 'right') {
-        initX = width - spriteW - 24;
-        initY = isMobile ? 18 : height * 0.42;
+        initX = width - spriteW - 20;
+        initY = isMobile ? 24 : height * 0.42;
       } else if (meta.zone === 'bottom-left') {
-        initX = 28;
-        initY = height - spriteH - 18;
+        initX = width * 0.20;
+        initY = height - spriteH - 16;
       } else if (meta.zone === 'bottom-right') {
-        initX = width - spriteW - 28;
-        initY = height - spriteH - 18;
+        initX = width * 0.75;
+        initY = height - spriteH - 16;
       }
 
-      const initialDir: 1 | -1 = meta.zone === 'right' || meta.zone === 'bottom-right' ? -1 : 1;
+      // Random starting direction (left or right)
+      const initialDir: 1 | -1 = Math.random() > 0.5 ? 1 : -1;
 
       return {
         meta,
@@ -406,7 +420,7 @@ export const PixelCompanions: React.FC = () => {
     }, 2500);
   }, []);
 
-  // Main 60fps / 30fps animation loop with quadrant territory confinement
+  // Main animation loop with dynamic random movement
   useEffect(() => {
     let animId: number;
     let lastTime = performance.now();
@@ -452,12 +466,8 @@ export const PixelCompanions: React.FC = () => {
 
         const currentSize = isMobile ? meta.baseSizeMobile : meta.baseSizeDesktop;
         const spriteW = currentSize * meta.aspectRatio;
-        const spriteH = currentSize;
 
-        // Get strict territory domain for this character
-        const bounds = getZoneBounds(meta, width, height, avoidBox, spriteW, spriteH);
-
-        // Clamped target Y within territory
+        const bounds = getZoneBounds(meta, width, height, avoidBox, spriteW, currentSize);
         const targetY = Math.max(bounds.minY, Math.min(bounds.maxY, sim.y));
 
         if (reducedMotion) {
@@ -473,10 +483,10 @@ export const PixelCompanions: React.FC = () => {
 
         let verticalOffset = 0;
         if (meta.id === 'axolotl') {
-          verticalOffset = Math.sin(time * 0.0028) * (isMobile ? 6 : 10);
+          verticalOffset = Math.sin(time * 0.0028) * (isMobile ? 5 : 8);
         }
 
-        // State Machine
+        // State Machine with spontaneous random walking
         if (sim.state === 'idle') {
           sim.frame = 'idle';
           sim.stateTimer -= dt * 1000;
@@ -487,17 +497,12 @@ export const PixelCompanions: React.FC = () => {
           }
 
           if (sim.stateTimer <= 0) {
-            const shouldWalk = Math.random() > 0.18;
-            if (shouldWalk) {
-              sim.state = 'walk';
-              sim.stateTimer =
-                Math.random() * (meta.walkRange[1] - meta.walkRange[0]) + meta.walkRange[0];
-              if (Math.random() < 0.35) {
-                sim.dir = (sim.dir * -1) as 1 | -1;
-              }
-            } else {
-              sim.stateTimer =
-                Math.random() * (meta.idleRange[1] - meta.idleRange[0]) + meta.idleRange[0];
+            sim.state = 'walk';
+            sim.stateTimer =
+              Math.random() * (meta.walkRange[1] - meta.walkRange[0]) + meta.walkRange[0];
+            // 50% random chance to pick a new direction when starting to walk!
+            if (Math.random() < 0.50) {
+              sim.dir = (sim.dir * -1) as 1 | -1;
             }
           }
         } else if (sim.state === 'walk') {
@@ -511,7 +516,7 @@ export const PixelCompanions: React.FC = () => {
 
           sim.x += sim.dir * meta.speed * dt;
 
-          // Confine strictly inside character's designated perimeter territory
+          // Rebound smoothly and randomly at boundary edges
           if (sim.x <= bounds.minX) {
             sim.x = bounds.minX;
             sim.dir = 1;
@@ -522,18 +527,18 @@ export const PixelCompanions: React.FC = () => {
 
           if (sim.stateTimer <= 0) {
             const rollChance = meta.id === 'pangolin' && Math.random() < 0.35;
-            const jumpChance = Math.random() < 0.2;
+            const jumpChance = Math.random() < 0.22;
 
             if (rollChance) {
               sim.state = 'roll';
               sim.frame = 'jump';
-              sim.stateTimer = 2000;
+              sim.stateTimer = 2200;
             } else if (jumpChance) {
               sim.state = 'jump';
               sim.frame = 'jump';
               sim.jumpTimer = 0;
               sim.jumpDuration = meta.id === 'kiwi' ? 450 : 650;
-              sim.jumpApex = meta.id === 'kiwi' ? 32 : 22;
+              sim.jumpApex = meta.id === 'kiwi' ? 30 : 20;
             } else {
               sim.state = 'idle';
               sim.frame = 'idle';
@@ -593,7 +598,6 @@ export const PixelCompanions: React.FC = () => {
         const rotate = sim.state === 'roll' ? `rotate(${sim.rotation}deg)` : '';
         spriteEl.style.transform = `scaleX(${sim.dir}) ${rotate}`;
 
-        // Apply responsive sprite height dynamically
         const targetHeightPx = `${currentSize}px`;
         if (imgEl.style.height !== targetHeightPx) {
           imgEl.style.height = targetHeightPx;
@@ -668,7 +672,6 @@ export const PixelCompanions: React.FC = () => {
               draggable={false}
               className="block opacity-75 group-hover:opacity-100 transition-opacity duration-150"
               style={{
-                // Responsive size: smaller on mobile so it never crowds visual space
                 height: `${char.baseSizeDesktop}px`,
                 width: 'auto',
                 imageRendering: 'pixelated',
