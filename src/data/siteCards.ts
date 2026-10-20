@@ -7,9 +7,9 @@ export interface SiteCardMedia {
 
 export const SITE_CARDS_DATA: Record<string, SiteCardMedia> = {
   'visual-design': {
-    src: 'https://res.cloudinary.com/dfkasrljh/video/upload/f_auto,q_auto/v1792428064/porto-visual_hhreps.mp4',
+    src: 'https://res.cloudinary.com/dfkasrljh/video/upload/c_crop,w_1420,h_1080,g_center/f_auto,q_auto/v1792428064/porto-visual_hhreps.mp4',
     type: 'video',
-    poster: '/cards/site-window-poster.webp',
+    poster: '/cards/visual-design-poster.webp',
     alt: 'Visual Design site preview',
   },
   'motion-graphics': {

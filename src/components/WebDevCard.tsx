@@ -38,7 +38,7 @@ export const WebDevCard: React.FC<WebDevCardProps> = ({ service }) => {
     return () => mq.removeEventListener('change', handleChange);
   }, []);
 
-  // Lazy load video sources within 600px of viewport
+  // Lazy load video sources within 800px of viewport
   const [shouldLoadSources, setShouldLoadSources] = useState(
     () => typeof window !== 'undefined' && !('IntersectionObserver' in window)
   );
@@ -55,14 +55,14 @@ export const WebDevCard: React.FC<WebDevCardProps> = ({ service }) => {
           lazyObserver.disconnect();
         }
       },
-      { rootMargin: '600px' }
+      { rootMargin: '800px' }
     );
 
     lazyObserver.observe(cardEl);
     return () => lazyObserver.disconnect();
   }, []);
 
-  // Off-screen pause observer: pause when < 25% of card is in viewport
+  // Off-screen pause observer: pause when < 15% of card is in viewport
   useEffect(() => {
     const cardEl = cardRef.current;
     if (!cardEl || !('IntersectionObserver' in window)) return;
@@ -70,10 +70,10 @@ export const WebDevCard: React.FC<WebDevCardProps> = ({ service }) => {
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        const inView = entry.intersectionRatio >= 0.25;
+        const inView = entry.intersectionRatio >= 0.15;
         setIsCardInView(inView);
       },
-      { threshold: [0, 0.25] }
+      { threshold: [0, 0.15] }
     );
 
     visibilityObserver.observe(cardEl);

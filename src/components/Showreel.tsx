@@ -23,7 +23,7 @@ export const Showreel: React.FC = () => {
     return Boolean((navigator as any)?.connection?.saveData);
   };
 
-  // 1. Lazy load <source> elements when panel is within ~600px of viewport
+  // 1. Lazy load <source> elements when panel is within ~800px of viewport
   useEffect(() => {
     const sectionEl = sectionRef.current;
     if (!sectionEl || !('IntersectionObserver' in window)) return;
@@ -36,7 +36,7 @@ export const Showreel: React.FC = () => {
           lazyObserver.disconnect();
         }
       },
-      { rootMargin: '600px' }
+      { rootMargin: '800px' }
     );
 
     lazyObserver.observe(sectionEl);
@@ -50,7 +50,7 @@ export const Showreel: React.FC = () => {
     }
   }, [shouldLoadSources]);
 
-  // 2. Autoplay only when video is >= 50% visible, pause when leaving
+  // 2. Autoplay when video is >= 15% visible, pause when leaving (< 10%)
   useEffect(() => {
     const videoEl = videoRef.current;
     if (!videoEl) return;
@@ -60,19 +60,19 @@ export const Showreel: React.FC = () => {
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        const isVisible50 = entry.intersectionRatio >= 0.5;
+        const isVisible15 = entry.intersectionRatio >= 0.15;
 
-        if (isVisible50) {
+        if (isVisible15) {
           if (!prefersReducedMotion() && !isSaveData()) {
             videoEl.play().catch(() => {});
           }
-        } else {
+        } else if (entry.intersectionRatio < 0.1) {
           if (!videoEl.paused) {
             videoEl.pause();
           }
         }
       },
-      { threshold: [0, 0.5] }
+      { threshold: [0, 0.1, 0.15] }
     );
 
     visibilityObserver.observe(videoEl);
@@ -127,16 +127,25 @@ export const Showreel: React.FC = () => {
             <div className="w-full max-w-[560px] md:max-w-[760px] mx-auto flex flex-col">
               {/* 16:9 Video Block with 24px radius */}
               <div className="relative aspect-[16/9] w-full rounded-[24px] overflow-hidden project-card-media flex-shrink-0">
+                <img
+                  src="/reel/poster.webp"
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+                />
                 <video
                   ref={videoRef}
                   muted
                   loop
                   playsInline
                   crossOrigin="anonymous"
-                  preload="metadata"
+                  preload={shouldLoadSources ? 'auto' : 'none'}
                   poster="/reel/poster.webp" // TODO: replace /public/reel/*
                   aria-label="Cartesyx Studio showreel"
-                  className="w-full h-full object-cover"
+                  onEnded={(e) => {
+                    e.currentTarget.play().catch(() => {});
+                  }}
+                  className="relative z-10 w-full h-full object-cover"
                 >
                   {shouldLoadSources && (
                     <>

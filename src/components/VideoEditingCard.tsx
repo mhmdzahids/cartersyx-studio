@@ -74,7 +74,7 @@ export const VideoEditingCard: React.FC<VideoEditingCardProps> = ({ service }) =
     };
   }, []);
 
-  // 1. Lazy load sources within 600px of viewport
+  // 1. Lazy load sources within 800px of viewport
   useEffect(() => {
     const cardEl = cardRef.current;
     if (!cardEl || !('IntersectionObserver' in window)) return;
@@ -87,7 +87,7 @@ export const VideoEditingCard: React.FC<VideoEditingCardProps> = ({ service }) =
           lazyObserver.disconnect();
         }
       },
-      { rootMargin: '600px' }
+      { rootMargin: '800px' }
     );
 
     lazyObserver.observe(cardEl);
@@ -100,7 +100,7 @@ export const VideoEditingCard: React.FC<VideoEditingCardProps> = ({ service }) =
     }
   }, [shouldLoadSources]);
 
-  // 2. Autoplay when card >= 50% visible, pause on exit
+  // 2. Autoplay when card >= 15% visible, pause on exit (< 10%)
   useEffect(() => {
     const cardEl = cardRef.current;
     const videoEl = videoRef.current;
@@ -110,19 +110,19 @@ export const VideoEditingCard: React.FC<VideoEditingCardProps> = ({ service }) =
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        const isVisible50 = entry.intersectionRatio >= 0.5;
+        const isVisible15 = entry.intersectionRatio >= 0.15;
 
-        if (isVisible50) {
+        if (isVisible15) {
           if (!prefersReducedMotion() && !isSaveData()) {
             videoEl.play().catch(() => {});
           }
-        } else {
+        } else if (entry.intersectionRatio < 0.1) {
           if (!videoEl.paused) {
             videoEl.pause();
           }
         }
       },
-      { threshold: [0, 0.5] }
+      { threshold: [0, 0.1, 0.15] }
     );
 
     visibilityObserver.observe(cardEl);
@@ -163,29 +163,40 @@ export const VideoEditingCard: React.FC<VideoEditingCardProps> = ({ service }) =
           }}
         >
           {/* Inside wrapper: 9:16 video at top, 100% width, bottom ~12.5% cropped by 9:14 wrapper */}
-          <video
-            ref={videoRef}
-            muted
-            loop
-            playsInline
-            crossOrigin="anonymous"
-            preload="metadata"
-            poster="/cards/video-editing-poster.webp" // TODO: replace /public/cards/*
-            aria-label="Video editing sample"
-            data-placeholder="true"
-            className="w-full aspect-[9/16] object-cover object-top select-none block pointer-events-none"
-          >
-            {shouldLoadSources && (
-              <>
-                {/* TODO: replace /public/cards/* */}
-                <source src="/cards/video-editing.mp4" type="video/mp4" />
-                <source
-                  src="https://res.cloudinary.com/dfkasrljh/video/upload/v1792249218/porto_fqbfid.mp4"
-                  type="video/mp4"
-                />
-              </>
-            )}
-          </video>
+          <div className="relative w-full aspect-[9/16] overflow-hidden">
+            <img
+              src="/cards/video-editing-poster.webp"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover object-top select-none pointer-events-none"
+            />
+            <video
+              ref={videoRef}
+              muted
+              loop
+              playsInline
+              crossOrigin="anonymous"
+              preload={shouldLoadSources ? 'auto' : 'none'}
+              poster="/cards/video-editing-poster.webp" // TODO: replace /public/cards/*
+              aria-label="Video editing sample"
+              data-placeholder="true"
+              onEnded={(e) => {
+                e.currentTarget.play().catch(() => {});
+              }}
+              className="relative z-10 w-full h-full object-cover object-top select-none block pointer-events-none"
+            >
+              {shouldLoadSources && (
+                <>
+                  {/* TODO: replace /public/cards/* */}
+                  <source src="/cards/video-editing.mp4" type="video/mp4" />
+                  <source
+                    src="https://res.cloudinary.com/dfkasrljh/video/upload/v1792249218/porto_fqbfid.mp4"
+                    type="video/mp4"
+                  />
+                </>
+              )}
+            </video>
+          </div>
         </ScreenMedia>
       </div>
     </div>

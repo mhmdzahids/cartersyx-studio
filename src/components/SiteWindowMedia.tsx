@@ -35,7 +35,7 @@ export const SiteWindowMedia: React.FC<SiteWindowMediaProps> = ({ serviceId }) =
     return () => mq.removeEventListener('change', handleChange);
   }, []);
 
-  // 1. Lazy load sources within 600px of viewport
+  // 1. Lazy load sources within 800px of viewport
   useEffect(() => {
     const el = windowRef.current;
     if (!el || !('IntersectionObserver' in window)) return;
@@ -48,7 +48,7 @@ export const SiteWindowMedia: React.FC<SiteWindowMediaProps> = ({ serviceId }) =
           lazyObserver.disconnect();
         }
       },
-      { rootMargin: '600px' }
+      { rootMargin: '800px' }
     );
 
     lazyObserver.observe(el);
@@ -61,7 +61,7 @@ export const SiteWindowMedia: React.FC<SiteWindowMediaProps> = ({ serviceId }) =
     }
   }, [shouldLoadSources]);
 
-  // 2. Autoplay when window >= 50% visible, pause on exit
+  // 2. Autoplay when window >= 15% visible, pause on exit (< 10%)
   useEffect(() => {
     const el = windowRef.current;
     const videoEl = videoRef.current;
@@ -70,19 +70,19 @@ export const SiteWindowMedia: React.FC<SiteWindowMediaProps> = ({ serviceId }) =
     const visibilityObserver = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        const isVisible50 = entry.intersectionRatio >= 0.5;
+        const isVisible15 = entry.intersectionRatio >= 0.15;
 
-        if (isVisible50) {
+        if (isVisible15) {
           if (!isMotionOff) {
             videoEl.play().catch(() => {});
           }
-        } else {
+        } else if (entry.intersectionRatio < 0.1) {
           if (!videoEl.paused) {
             videoEl.pause();
           }
         }
       },
-      { threshold: [0, 0.5] }
+      { threshold: [0, 0.1, 0.15] }
     );
 
     visibilityObserver.observe(el);
@@ -96,24 +96,37 @@ export const SiteWindowMedia: React.FC<SiteWindowMediaProps> = ({ serviceId }) =
   return (
     <div
       ref={windowRef}
-      className="site-window service-card-media pointer-events-none select-none"
+      className="site-window service-card-media pointer-events-none select-none relative overflow-hidden"
       aria-hidden="true"
     >
       {media.type === 'video' ? (
-        <video
-          ref={videoRef}
-          muted
-          loop
-          playsInline
-          crossOrigin="anonymous"
-          preload="metadata"
-          poster={media.poster}
-          aria-label={media.alt}
-          data-placeholder="true"
-          className="w-full h-full object-cover object-top select-none block pointer-events-none"
-        >
-          {shouldLoadSources && <source src={media.src} type="video/mp4" />}
-        </video>
+        <div className="relative w-full h-full overflow-hidden">
+          {media.poster && (
+            <img
+              src={media.poster}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover object-top select-none pointer-events-none"
+            />
+          )}
+          <video
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            crossOrigin="anonymous"
+            preload={shouldLoadSources ? 'auto' : 'none'}
+            poster={media.poster}
+            aria-label={media.alt}
+            data-placeholder="true"
+            onEnded={(e) => {
+              e.currentTarget.play().catch(() => {});
+            }}
+            className="relative z-10 w-full h-full object-cover object-top select-none block pointer-events-none"
+          >
+            {shouldLoadSources && <source src={media.src} type="video/mp4" />}
+          </video>
+        </div>
       ) : (
         <img
           src={media.src}

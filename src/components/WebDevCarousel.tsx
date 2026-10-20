@@ -102,8 +102,16 @@ export const WebDevCarousel: React.FC<WebDevCarouselProps> = ({
                   type="button"
                   onClick={(e) => handleStaticVideoToggle(slide.id, e)}
                   aria-label={isPlaying ? 'Pause video' : 'Play video'}
-                  className="w-full h-full cursor-pointer focus-visible:outline-2 focus-visible:outline-[currentColor] focus-visible:-outline-offset-4"
+                  className="w-full h-full cursor-pointer focus-visible:outline-2 focus-visible:outline-[currentColor] focus-visible:-outline-offset-4 relative overflow-hidden"
                 >
+                  {slide.poster && (
+                    <img
+                      src={slide.poster}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 w-full h-full object-cover object-top select-none pointer-events-none"
+                    />
+                  )}
                   <video
                     ref={(el) => {
                       if (el) {
@@ -114,13 +122,16 @@ export const WebDevCarousel: React.FC<WebDevCarouselProps> = ({
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload={shouldLoadSources ? 'auto' : 'none'}
                     poster={slide.poster}
                     aria-label={slide.alt}
                     data-placeholder="true"
                     onPlay={() => setPlayingVideoId(slide.id)}
                     onPause={() => setPlayingVideoId(null)}
-                    className="w-full aspect-[9/16] object-cover object-top select-none pointer-events-none block"
+                    onEnded={(e) => {
+                      e.currentTarget.play().catch(() => {});
+                    }}
+                    className="relative z-10 w-full aspect-[9/16] object-cover object-top select-none pointer-events-none block"
                   >
                     {shouldLoadSources && (
                       <>
@@ -195,26 +206,39 @@ export const WebDevCarousel: React.FC<WebDevCarouselProps> = ({
             <div key={`s1-${slide.id}`} className="marquee__slide">
               <ScreenMedia>
                 {slide.type === 'video' ? (
-                  <video
-                    ref={(el) => {
-                      if (el) videoRefs.current[index] = el;
-                    }}
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    poster={slide.poster}
-                    aria-label={slide.alt}
-                    data-placeholder="true"
-                    className="w-full aspect-[9/16] object-cover object-top select-none pointer-events-none block"
-                  >
-                    {shouldLoadSources && (
-                      <>
-                        <source src={slide.src} type="video/webm" />
-                        {slide.mp4Src && <source src={slide.mp4Src} type="video/mp4" />}
-                      </>
+                  <div className="relative w-full aspect-[9/16] overflow-hidden">
+                    {slide.poster && (
+                      <img
+                        src={slide.poster}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover object-top select-none pointer-events-none"
+                      />
                     )}
-                  </video>
+                    <video
+                      ref={(el) => {
+                        if (el) videoRefs.current[index] = el;
+                      }}
+                      muted
+                      loop
+                      playsInline
+                      preload={shouldLoadSources ? 'auto' : 'none'}
+                      poster={slide.poster}
+                      aria-label={slide.alt}
+                      data-placeholder="true"
+                      onEnded={(e) => {
+                        e.currentTarget.play().catch(() => {});
+                      }}
+                      className="relative z-10 w-full h-full object-cover object-top select-none pointer-events-none block"
+                    >
+                      {shouldLoadSources && (
+                        <>
+                          <source src={slide.src} type="video/webm" />
+                          {slide.mp4Src && <source src={slide.mp4Src} type="video/mp4" />}
+                        </>
+                      )}
+                    </video>
+                  </div>
                 ) : (
                   <img
                     src={slide.src}
@@ -237,26 +261,39 @@ export const WebDevCarousel: React.FC<WebDevCarouselProps> = ({
             <div key={`s2-${slide.id}`} className="marquee__slide">
               <ScreenMedia>
                 {slide.type === 'video' ? (
-                  <video
-                    ref={(el) => {
-                      if (el) videoRefs.current[slideCount + index] = el;
-                    }}
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    poster={slide.poster}
-                    aria-hidden="true"
-                    tabIndex={-1}
-                    className="w-full aspect-[9/16] object-cover object-top select-none pointer-events-none block"
-                  >
-                    {shouldLoadSources && (
-                      <>
-                        <source src={slide.src} type="video/webm" />
-                        {slide.mp4Src && <source src={slide.mp4Src} type="video/mp4" />}
-                      </>
+                  <div className="relative w-full aspect-[9/16] overflow-hidden">
+                    {slide.poster && (
+                      <img
+                        src={slide.poster}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover object-top select-none pointer-events-none"
+                      />
                     )}
-                  </video>
+                    <video
+                      ref={(el) => {
+                        if (el) videoRefs.current[slideCount + index] = el;
+                      }}
+                      muted
+                      loop
+                      playsInline
+                      preload={shouldLoadSources ? 'auto' : 'none'}
+                      poster={slide.poster}
+                      aria-hidden="true"
+                      tabIndex={-1}
+                      onEnded={(e) => {
+                        e.currentTarget.play().catch(() => {});
+                      }}
+                      className="relative z-10 w-full h-full object-cover object-top select-none pointer-events-none block"
+                    >
+                      {shouldLoadSources && (
+                        <>
+                          <source src={slide.src} type="video/webm" />
+                          {slide.mp4Src && <source src={slide.mp4Src} type="video/mp4" />}
+                        </>
+                      )}
+                    </video>
+                  </div>
                 ) : (
                   <img
                     src={slide.src}
